@@ -1,0 +1,13 @@
+ {
+    "name": "ra/installer",
+    "type": "composer-installer",
+    "autoload": {
+        "psr-0": {"Ra\\Installer\\": "src/"}
+    },
+    "require": {
+	"composer/installers": "1.0.x"
+    },
+    "extra": {
+        "class": "Ra\\Installer\\RaInstaller"
+    }
+}
