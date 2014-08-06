@@ -38,4 +38,37 @@ class RaInstaller extends LibraryInstaller
     {
        return isset($this->locations[$packageType]);
     }
+
+	/**
+	 * Generates a vendor metadata file
+	 */
+	protected function generateVendorMetaData() {
+		touch('htdocs/modules/ra/vendormetadata.php');
+	}
+
+	/**
+	 * Installs specific package.
+	 *
+	 * @param InstalledRepositoryInterface $repo    repository in which to check
+	 * @param PackageInterface             $package package instance
+	 */
+	public function install(InstalledRepositoryInterface $repo, PackageInterface $package) {
+		parent::install($repo, $package);
+		$this->generateVendorMetaData();
+	}
+
+
+	/**
+	 * Updates specific package.
+	 *
+	 * @param InstalledRepositoryInterface $repo    repository in which to check
+	 * @param PackageInterface             $initial already installed package version
+	 * @param PackageInterface             $target  updated version
+	 *
+	 * @throws InvalidArgumentException if $initial package is not installed
+	 */
+	public function update(InstalledRepositoryInterface $repo, PackageInterface $initial, PackageInterface $target) {
+		parent::update($repo, $initial, $target);
+		$this->generateVendorMetaData();
+	}
 }
