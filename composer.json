@@ -5,7 +5,7 @@
         "psr-0": {"Ra\\Installer\\": "src/"}
     },
     "require": {
-	"composer/installers": "1.0.18"
+	"composer/installers": "v1.0.18"
     },
     "extra": {
         "class": "Ra\\Installer\\RaInstaller"
