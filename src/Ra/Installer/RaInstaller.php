@@ -6,6 +6,7 @@ use \Composer\Package\PackageInterface;
 use \Composer\Installer\LibraryInstaller;
 use \Composer\Repository\InstalledRepositoryInterface;
 
+use Composer\Script\Event;
 
 class RaInstaller extends LibraryInstaller
 {
@@ -72,4 +73,48 @@ class RaInstaller extends LibraryInstaller
 		parent::update($repo, $initial, $target);
 		$this->generateVendorMetaData();
 	}
+
+	public static function postUpdate(Event $event) {
+		self::cleanUpOldModules($event);
+	}
+
+	public static function postInstall(Event $event) {
+		self::cleanUpOldModules($event);
+	}
+
+	protected static function cleanUpOldModules(Event $event) {
+
+		$composer = $event->getComposer();
+		$requires = $composer->getPackage()->getRequires();
+
+		$projectPath = str_replace('vendor/vkf/shop', '', $composer->getInstallationManager()->getInstallpath($composer->getPackage()));
+		$modulePath = $projectPath . 'htdocs/modules';
+		foreach (array('ra', 'vkf') as $renzelVendorDir) {
+			foreach (glob($modulePath . '/' . $renzelVendorDir . '/*') as $file) {
+				if (is_dir($file)) {
+					$packageId = str_replace($modulePath . '/', '', $file);
+					if (!isset($requires[$packageId])) {
+						self::rrmdir($file);
+						$event->getIO()->write('Deleted old package ' . $packageId);
+					}
+				}
+			}
+
+		}
+
+	}
+
+	protected static function rrmdir($dir) {
+		if (is_dir($dir)) {
+			$objects = scandir($dir);
+			foreach ($objects as $object) {
+				if ($object != "." && $object != "..") {
+					if (filetype($dir."/".$object) == "dir") rrmdir($dir."/".$object); else unlink($dir."/".$object);
+				}
+			}
+			reset($objects);
+			rmdir($dir);
+		}
+	}
+
 }
