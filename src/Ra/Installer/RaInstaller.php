@@ -74,15 +74,8 @@ class RaInstaller extends LibraryInstaller
 		$this->generateVendorMetaData();
 	}
 
-	public static function postUpdate(Event $event) {
-		self::cleanUpOldModules($event);
-	}
 
-	public static function postInstall(Event $event) {
-		self::cleanUpOldModules($event);
-	}
-
-	protected static function cleanUpOldModules(Event $event) {
+	public static function cleanUpOldModules(Event $event) {
 
 		$composer = $event->getComposer();
 		$requires = $composer->getPackage()->getRequires();
