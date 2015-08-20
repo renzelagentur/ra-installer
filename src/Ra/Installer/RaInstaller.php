@@ -28,6 +28,7 @@ class RaInstaller extends LibraryInstaller
     protected $_locations = array(
         'ra-module' => 'htdocs/modules/ra',
         'ra-theme'  => 'htdocs/application/views',
+        'ra-trans'  => 'htdocs/application/translations'
         'oxid-base' => 'htdocs'
     );
 
